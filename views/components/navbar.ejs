@@ -1,0 +1,17 @@
+<%
+    const class_home = active=="home"? "active" : ""
+    const class_about = active=="about"? "active" : ""
+    const class_add = active=="add"? "active" : ""
+
+%>
+
+<header class="mb-auto">
+    <div>
+      <h3 class="float-md-start mb-0">Best IOT Dashboard</h3>
+      <nav class="nav nav-masthead justify-content-center float-md-end">
+        <a class="nav-link <%=class_home%>" aria-current="page" href="/">Home</a>
+        <a class="nav-link <%=class_about%>" href="/about">About us</a>
+        <a class="nav-link <%=class_add%>" href="/add">Add device</a>
+      </nav>
+    </div>
+  </header>
