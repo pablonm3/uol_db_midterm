@@ -7,8 +7,8 @@ function validate_device_name(){
         error_text = "Please enter a device name";
     }
     else{
-        if(text.length <3 || text.length >14){
-            error_text = "Device name must be between 3 and 14 characters";
+        if(text.length <3 || text.length >30){
+            error_text = "Device name must be between 3 and 30 characters";
         }
     }
     field.setCustomValidity(error_text); 
@@ -54,31 +54,23 @@ function validate_device_temperature(){
 }
 
 
-function form_init() {
-    'use strict'
-  
+function form_submit(event) {
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     var forms = document.querySelectorAll('.needs-validation')
-    // Loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-      .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-         let v1 = validate_device_name(),
-             v2 =  validate_device_type(),
-             v3 = validate_device_temperature()
-         let is_valid = v1 && v2 && v3
-         if (is_valid) {
-            console.log("valid form")
-            //form.submit()
-          }
-          else{
-            console.error("form is not valid")
-          }
-  
-          form.classList.add('was-validated')
-        }, false)
-      })
-  }
+    var form = forms[0]
+    let v1 = validate_device_name(),
+        v2 =  validate_device_type(),
+        v3 = validate_device_temperature()
+    let is_valid = v1 && v2 && v3
+    form.classList.add('was-validated')
+    if (is_valid) {
+        console.log("valid form")
+    }
+    else{
+        console.error("form is not valid")
+        event.preventDefault();
+    }  
+}
 
 
 function docReady(fn) {
@@ -92,4 +84,4 @@ function docReady(fn) {
 }  
 
 
-docReady(form_init)
+//docReady(form_init)

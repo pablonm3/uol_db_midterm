@@ -21,10 +21,19 @@
   <%- include('components/navbar', {active:"add"}); %>
 
   <main class="px-3">
-    <form class="needs-validation" onsubmit="return false" novalidate>
+    <% if (status==="ok") {%>
+        <div class="alert alert-success" role="alert">
+            Device created succesfully!
+        </div>
+    <%} else if(status=="error") { %>
+        <div class="alert alert-danger" role="alert">
+            Ops, Something went wrong could not add device
+        </div>
+    <%}%>
+    <form action="/add" method="post" class="needs-validation" onsubmit="form_submit(event)" novalidate>
         <div class="mb-3 has-validation">
           <label for="inputName" class="form-label">Device name</label>
-          <input type="text" class="form-control" id="inputName" aria-describedby="nameHelp">
+          <input type="text" name="name" class="form-control" id="inputName" aria-describedby="nameHelp">
           <div id="nameHelp" class="form-text">Device name must be unique for every connected device</div>
           <div id="device_name_error" class="invalid-feedback">
             
@@ -32,7 +41,7 @@
         </div>
         <div class="mb-3">
           <label for="selectType" class="form-label">Type</label>
-          <select class="form-select" id="selectType" aria-label="Default select type">
+          <select class="form-select" name="type" id="selectType" aria-label="Default select type">
             <option value="" selected>Select a type</option>
             <option value="ac">Air conditioner</option>
             <option value="heating">Heating</option>
@@ -51,7 +60,7 @@
 
         <div class="mb-3">
             <label for="select_on_off" class="form-label">Device status(on / off)</label>
-            <select class="form-select" id="select_on_off" aria-label="Default select status">
+            <select class="form-select" name="on_off" id="select_on_off" aria-label="Default select status">
               <option selected value="on">On</option>
               <option value="off">Off</option>
             </select>
@@ -59,7 +68,7 @@
 
           <div class="mb-3">
             <label for="select_lock" class="form-label">Device status(open / locked)</label>
-            <select class="form-select" id="select_lock" aria-label="Default select status">
+            <select class="form-select" name="open_locked" id="select_lock" aria-label="Default select status">
               <option selected value="open">Open</option>
               <option value="locked">Locked</option>
             </select>
@@ -67,7 +76,7 @@
 
           <div class="mb-3">
             <label for="select_open_close" class="form-label">Device status(open / closed)</label>
-            <select class="form-select" id="select_open_close" aria-label="Default select open/close">
+            <select class="form-select" name="open_closed"  id="select_open_close" aria-label="Default select open/close">
               <option selected value="open">Open</option>
               <option value="closed">Closed</option>
             </select>
@@ -75,12 +84,12 @@
           
           <div class="mb-3">
             <p class="form-label">Device volume</p>
-            <input type="range" min="1" max="100" value="50" class="slider" id="volume">
+            <input type="range" name="volume" min="1" max="100" value="50" class="slider" id="volume">
           </div>
 
           <div class="mb-3 has-validation">
             <label for="temperature_input" class="form-label">Temperature(degree celcius)</label>
-            <input min="16" max="30" value="22" type="number" class="form-control" id="temperature_input">
+            <input min="16" max="30" name="temperature" value="22" type="number" class="form-control" id="temperature_input">
             <div id="temperature_error" class="invalid-feedback">
               
             </div>
