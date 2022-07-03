@@ -19,17 +19,17 @@
     
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <%- include('components/navbar', {active:"add"}); %>
-
   <main class="px-3">
-    <% if (status==="ok") {%>
+      <% if (status==="ok") {%>
         <div class="alert alert-success" role="alert">
             Device created succesfully!
         </div>
-    <%} else if(status=="error") { %>
-        <div class="alert alert-danger" role="alert">
-            Ops, Something went wrong could not add device
-        </div>
-    <%}%>
+        <%} else if(status=="error") { %>
+            <div class="alert alert-danger" role="alert">
+                Ops, Something went wrong could not add device
+            </div>
+            <%}%>
+    <h1>Link a new device</h1>
     <form action="/add" method="post" class="needs-validation" onsubmit="form_submit(event)" novalidate>
         <div class="mb-3 has-validation">
           <label for="inputName" class="form-label">Device name</label>
