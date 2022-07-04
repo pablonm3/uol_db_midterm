@@ -1,0 +1,149 @@
+
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>IOT Dashboard - Control</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/cover/">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+     <link href="/css/app.css" rel="stylesheet">
+     <link href="/css/status.css" rel="stylesheet">
+     <script src="/js/add.js"></script>
+  </head>
+  <body class="d-flex h-100 text-center text-white bg-dark">
+    
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <%- include('components/navbar', {active:"control"}); %>
+  
+  <main class="px-3">
+    <% if (status==="ok") {%>
+        <div class="alert alert-success" role="alert">
+            Device modified succesfully!
+        </div>
+        <%} else if(status=="error") { %>
+            <div class="alert alert-danger" role="alert">
+                Ops, Something went wrong 
+            </div>
+         <%}%>
+    <h1>Modify device</h1>
+    <p class="lead">
+        <a href="/control" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Modify a different device</a>
+      </p>
+    <form action="/control_sp" method="post" class="needs-validation" onsubmit="form_submit(event)" novalidate>
+        <div class="mb-3 has-validation">
+          <label for="inputName" class="form-label">Device name</label>
+          <input readonly value="<%=device.name%>" type="text" name="name" class="form-control" id="inputName" aria-describedby="nameHelp">
+          <div id="nameHelp" class="form-text">Device name must be unique for every connected device</div>
+          <div id="device_name_error" class="invalid-feedback">
+            
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="selectType" class="form-label">Type</label>
+          <select class="form-select" name="type" id="selectType" aria-label="Default select type">
+              <%
+                  var options = [{"value": "ac", "display":"Air conditioner"},
+                                  {"value": "heating", "display":"Heating"},
+                                  {"value": "curtains", "display":"curtains"},
+                                  {"value": "blinds", "display":"blinds"},
+                                  {"value": "lights", "display":"lights"},
+                                  {"value": "TV", "display":"TV"},
+                                  {"value": "audio", "display":"Audio System"},
+                                  {"value": "coffee", "display":"Coffee maker"},
+                                  {"value": "lock", "display":"Door lock"},
+                                  {"value": "outlet", "display":"outlet"}
+                                  ]
+                  for ( var i = 0; i < options.length; i++ )
+                  {
+                      const option = options[i]
+                      var selected = ( option['value'] == device.type ) ? "selected" : "";
+                      %><option value="<%=option['value'] %>" <%=selected %>> <%=option["display"] %> </option><%
+                  }
+              %>
+          </select>
+          <div id="device_type_error" class="invalid-feedback">
+          </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="select_on_off" class="form-label">Device status(on / off)</label>
+            <select class="form-select" name="on_off" id="select_on_off" aria-label="Default select status">
+              <%
+                  var options = [{"value": "on", "display":"On"},
+                                  {"value": "off", "display":"Off"}
+                                  ]
+                  for ( var i = 0; i < options.length; i++ )
+                  {
+                      const option = options[i]
+                      var selected = ( option['value'] == device.on_off ) ? "selected" : "";
+                      %><option value="<%=option['value'] %>" <%=selected %>> <%=option["display"] %> </option><%
+                  }
+              %>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="select_lock" class="form-label">Device status(open / locked)</label>
+            <select class="form-select" name="open_locked" id="select_lock" aria-label="Default select status">
+              <%
+                  var options = [{"value": "open", "display":"Open"},
+                                  {"value": "locked", "display":"Locked"}
+                                  ]
+                  for ( var i = 0; i < options.length; i++ )
+                  {
+                      const option = options[i]
+                      var selected = ( option['value'] == device.open_locked ) ? "selected" : "";
+                      %><option value="<%=option['value'] %>" <%=selected %>> <%=option["display"] %> </option><%
+                  }
+              %>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="select_open_close" class="form-label">Device status(open / closed)</label>
+            <select class="form-select" name="open_closed"  id="select_open_close" aria-label="Default select open/close">
+              <%
+                  var options = [{"value": "open", "display":"Open"},
+                                  {"value": "closed", "display":"Closed"}
+                                  ]
+                  for ( var i = 0; i < options.length; i++ )
+                  {
+                      const option = options[i]
+                      var selected = ( option['value'] == device.open_closed ) ? "selected" : "";
+                      %><option value="<%=option['value'] %>" <%=selected %>> <%=option["display"] %> </option><%
+                  }
+              %>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <p class="form-label">Device volume</p>
+            <input type="range" name="volume" min="1" max="100" value="<%=device.volume%>" class="slider" id="volume">
+          </div>
+
+          <div class="mb-3 has-validation">
+            <label for="temperature_input" class="form-label">Temperature(degree celcius)</label>
+            <input min="16" max="30" name="temperature" value="<%=device.temperature%>" type="number" class="form-control" id="temperature_input">
+            <div id="temperature_error" class="invalid-feedback">
+              
+            </div>
+          </div>
+
+
+
+        <button type="submit" class="btn btn-primary">Apply changes</button>
+      </form>
+  </main>
+
+  <%- include('components/footer'); %>
+</div>
+
+
+    
+  </body>
+</html>

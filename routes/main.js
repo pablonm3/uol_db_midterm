@@ -78,8 +78,61 @@ module.exports = function(app) {
             }
             else{
                 console.log("devices result: ", result)
-                res.render("status_sp",  {status:"ok", device: result[0]});
+                res.render("status_sp.ejs",  {status:"ok", device: result[0]});
             }
+        });
+    });
+
+    app.get("/control", function(req, res) {
+        // query database to get all the books
+        let sqlquery = "SELECT name FROM devices";
+        // execute sql query
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                console.error("err: ", err)
+                res.render("control.ejs",  {status:"error"});
+            }
+            else{
+                console.log("devices result: ", result)
+                res.render("control.ejs",  {status:"ok", devices: result});
+            }
+        });
+    });
+
+    app.get("/control_sp", function(req, res) {
+        // query database to get all the books
+        console.log("control page req.query: ", req.query)
+        let sqlquery = "SELECT * FROM devices WHERE name = ?";
+        // execute sql query
+        db.query(sqlquery, req.query.name, (err, result) => {
+            if (err) {
+                console.error("err: ", err)
+                res.render("control.ejs",  {status:"error", devices: []});
+            }
+            else{
+                console.log("devices result: ", result)
+                res.render("control_sp.ejs",  {status:"", device: result[0]});
+            }
+        });
+    });
+
+    app.post("/control_sp",function(req, res) {
+
+        console.log("req.body: ", req.body)
+        var sql = `UPDATE devices set type='${req.body.type}', on_off='${req.body.on_off}', open_locked='${req.body.open_locked}', open_closed='${req.body.open_closed}', volume='${req.body.volume}', temperature='${req.body.temperature}' WHERE name='${req.body.name}'`;
+        db.query(sql, function (err, result) {
+          console.error("result: ", result)
+          let sqlquery = "SELECT * FROM devices WHERE name = ?";
+          db.query(sqlquery, req.body.name, (err, result) => {
+                if (err) {
+                    console.error("err: ", err)
+                    res.render("control.ejs",  {status:"error", devices: []});
+                }
+                else{
+                    console.log("devices result: ", result)
+                    res.render("control_sp.ejs",  {status:"ok", device: result[0]});
+                }
+             });
         });
     });
 
