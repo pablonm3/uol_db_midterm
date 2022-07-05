@@ -4,6 +4,7 @@
     const class_add = active=="add"? "active" : ""
     const class_status = active=="status"? "active" : ""
     const class_control = active=="control"? "active" : ""
+    const class_delete = active=="delete"? "active" : ""
 
 %>
 
@@ -16,6 +17,7 @@
         <a class="nav-link <%=class_add%>" href="/add">Add device</a>
         <a class="nav-link <%=class_status%>" href="/status">Status</a>
         <a class="nav-link <%=class_control%>" href="/control">Control</a>
+        <a class="nav-link <%=class_delete%>" href="/delete">Delete</a>
       </nav>
     </div>
   </header>

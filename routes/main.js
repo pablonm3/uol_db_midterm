@@ -136,4 +136,39 @@ module.exports = function(app) {
         });
     });
 
+    app.get("/delete", function(req, res) {
+        let sqlquery = "SELECT name FROM devices";
+        // execute sql query
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                console.error("err: ", err)
+                res.render("delete.ejs",  {status:"error"});
+            }
+            else{
+                console.log("devices result: ", result)
+                res.render("delete.ejs",  {status:"", devices: result});
+            }
+        });
+    });
+
+    app.post("/delete",function(req, res) {
+
+        console.log("req.query: ", req.body)
+        var sql = `DELETE FROM devices WHERE name='${req.body.name}'`;
+        db.query(sql, function (err, result) {
+          console.error("result: ", result)
+          let sqlquery = "SELECT name FROM devices";
+          db.query(sqlquery, req.body.name, (err, result) => {
+                if (err) {
+                    console.error("err: ", err)
+                    res.render("delete.ejs",  {status:"error", devices: []});
+                }
+                else{
+                    console.log("devices result: ", result)
+                    res.render("delete.ejs",  {status:"ok", devices: result});
+                }
+             });
+        });
+    });
+
 }
