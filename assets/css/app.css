@@ -70,3 +70,8 @@ body {
 .top_menu{
   margin-bottom: 50px;
 }
+
+
+.hidden{
+  display: none;
+}

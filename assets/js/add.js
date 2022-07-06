@@ -73,6 +73,45 @@ function form_submit(event) {
 }
 
 
+
+
+function listen_select() {
+    console.log("TYPE_FIELDS_MAP: ", TYPE_FIELDS_MAP)
+console.log("ALL_TYPES: ", ALL_TYPES)
+
+    let select = document.getElementById('selectType');
+    let on_off_container = document.getElementById('on_off_container');
+    let open_locked_container = document.getElementById('open_locked_container');
+    let open_closed_container = document.getElementById('open_closed_container');
+    let volume_container = document.getElementById('volume_container');
+    let temperature_container = document.getElementById('temperature_container');
+    let type_element_map = {
+        "on_off": on_off_container,
+        "open_locked": open_locked_container,
+        "open_closed": open_closed_container,
+        "volume": volume_container,
+        "temperature": temperature_container
+    }
+    select.addEventListener('change', function() {
+      selectedValue = select.value
+
+      console.log("selected value: ", selectedValue);
+      console.log("TYPE_FIELDS_MAP: ", TYPE_FIELDS_MAP)
+      let types_to_show = TYPE_FIELDS_MAP[selectedValue] || []
+      console.log("types_to_show: ", types_to_show)
+      ALL_TYPES.forEach(type=>{
+        if(types_to_show.includes(type)){
+            type_element_map[type].classList.remove("hidden");
+        }
+        else{
+            type_element_map[type].classList.add('hidden');
+        }
+      })
+
+
+    });
+}  
+
 function docReady(fn) {
     // see if DOM is already available
     if (document.readyState === "complete" || document.readyState === "interactive") {
@@ -83,5 +122,4 @@ function docReady(fn) {
     }
 }  
 
-
-//docReady(form_init)
+docReady(listen_select)

@@ -17,6 +17,21 @@ db.connect((err) => {
 global.db = db;
 
 
+TYPE_FIELDS_MAP = {
+    "ac":["on_off",  "temperature"],
+    "heating":["on_off","temperature"],
+    "curtains":[ "open_closed"],
+    "blinds":[ "open_closed"],
+    "lights":["on_off"],
+    "TV":["on_off", "volume"],
+    "audio":["on_off", "volume"],
+    "coffee":["on_off"],
+    "lock":[ "open_locked"],
+    "outlet":["on_off"],
+}
+
+ALL_TYPES = ["on_off", "open_closed", "open_locked","temperature", "volume"]
+
 module.exports = function(app) {
     app.get("/",function(req, res){
         res.render("index.ejs")
@@ -28,24 +43,28 @@ module.exports = function(app) {
 
     app.get("/add",function(req, res) {
         console.error("get add page")
-        res.render("add.ejs",  {status: ""});
+        res.render("add.ejs",  {status: "", all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
     });
 
     app.post("/add",function(req, res) {
 
-        console.error("req.body: ", req.body) // object
-        console.error("req.json: ", req.json) // object
-        console.log("Request type :", req.get('Content-Type'));
-        var sql = "INSERT INTO devices (name, type, on_off, open_locked, open_closed, volume, temperature) VALUES ?";
-        var values = [[req.body.name, req.body.type, req.body.on_off, req.body.open_locked, req.body.open_closed, parseInt(req.body.volume), parseInt(req.body.temperature)]]
-        db.query(sql, [values], function (err, result) {
-          console.error("result: ", result)
+        let types_to_store = TYPE_FIELDS_MAP[req.body.type]
+        var sql = "INSERT INTO devices (name, type, "+ types_to_store.join(', ') +") VALUES ?";
+        var values = [req.body.name, req.body.type]
+        types_to_store.forEach(type => {
+            let value = req.body[type]
+            if(["volume", "temperature"].includes(type)){
+                value = parseInt(value)
+            }
+            values.push(value)
+        });
+        db.query(sql, [[values]], function (err, result) {
           if (err){
-             res.render("add.ejs",  {status: "error"});
+             res.render("add.ejs",  {status: "error", all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
              console.error("Something went wrong: ", err)
           }
           console.log("1 record inserted");
-          res.render("add.ejs",  {status: "ok"});
+          res.render("add.ejs",  {status: "ok", all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
         });
     });
 
@@ -57,7 +76,7 @@ module.exports = function(app) {
         db.query(sqlquery, (err, result) => {
             if (err) {
                 console.error("err: ", err)
-                res.render("status.ejs",  {status:"error"});
+                res.render("status.ejs",  {status:"error", devices: []});
             }
             else{
                 console.log("devices result: ", result)
@@ -74,7 +93,7 @@ module.exports = function(app) {
         db.query(sqlquery, req.query.name, (err, result) => {
             if (err) {
                 console.error("err: ", err)
-                res.render("status_sp.ejs",  {status:"error"});
+                res.render("status.ejs",  {status:"error", devices: []});
             }
             else{
                 console.log("devices result: ", result)
@@ -90,7 +109,7 @@ module.exports = function(app) {
         db.query(sqlquery, (err, result) => {
             if (err) {
                 console.error("err: ", err)
-                res.render("control.ejs",  {status:"error"});
+                res.render("control.ejs",  {status:"error", devices: []});
             }
             else{
                 console.log("devices result: ", result)
@@ -142,7 +161,7 @@ module.exports = function(app) {
         db.query(sqlquery, (err, result) => {
             if (err) {
                 console.error("err: ", err)
-                res.render("delete.ejs",  {status:"error"});
+                res.render("delete.ejs",  {status:"error", devices: []});
             }
             else{
                 console.log("devices result: ", result)
