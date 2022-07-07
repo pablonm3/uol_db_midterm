@@ -31,22 +31,42 @@
           <tr class="table-light">
             <th class="table-light" scope="col">Name</th>
             <th class="table-light" scope="col">Type</th>
-            <th class="table-light" scope="col">On/Off</th>
-            <th class="table-light" scope="col">Open/Locked</th>
-            <th class="table-light" scope="col">Open/Closed</th>
-            <th class="table-light" scope="col">Volume</th>
-            <th class="table-light" scope="col">Temperature</th>
+            <%if(device.on_off) { %>
+                <th class="table-light" scope="col">On/Off</th>
+             <%}%>
+            <%if(device.open_locked) { %>
+                <th class="table-light" scope="col">Open/Locked</th>
+             <%}%>
+             <%if(device.open_closed) { %>
+                <th class="table-light" scope="col">Open/Closed</th>
+             <%}%>
+             <%if(device.volume) { %>
+                <th class="table-light" scope="col">Volume</th>
+             <%}%>
+             <%if(device.temperature) { %>
+                <th class="table-light" scope="col">Temperature</th>
+             <%}%>
           </tr>
         </thead>
         <tbody class="table-light">
             <tr class="table-light">
                   <td class="table-light"><%= device.name %></td>
                   <td class="table-light"><%= device.type %></td>
-                  <td class="table-light"><%= device.on_off %></td>
-                  <td class="table-light"><%= device.open_locked %></td>
-                  <td class="table-light"><%= device.open_closed %></td>
-                  <td class="table-light"><%= device.volume %></td>
-                  <td class="table-light"><%= device.temperature %></td>
+                  <%if(device.on_off) { %>
+                    <td class="table-light"><%= device.on_off %></td>
+                  <%}%>
+                  <%if(device.open_locked) { %>
+                    <td class="table-light"><%= device.open_locked %></td>
+                 <%}%>
+                 <%if(device.open_closed) { %>
+                    <td class="table-light"><%= device.open_closed %></td>
+                 <%}%>
+                 <%if(device.volume) { %>
+                    <td class="table-light"><%= device.volume %></td>
+                 <%}%>
+                 <%if(device.temperature) { %>
+                    <td class="table-light"><%= device.temperature %></td>
+                 <%}%>
             </tr>
         </tbody>
       </table>
