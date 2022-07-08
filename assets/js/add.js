@@ -58,9 +58,10 @@ function form_submit(event) {
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     var forms = document.querySelectorAll('.needs-validation')
     var form = forms[0]
+    let types_to_show = TYPE_FIELDS_MAP[selectedValue] || []
     let v1 = validate_device_name(),
         v2 =  validate_device_type(),
-        v3 = validate_device_temperature()
+        v3 = types_to_show.includes("temperature")? validate_device_temperature(): true
     let is_valid = v1 && v2 && v3
     form.classList.add('was-validated')
     if (is_valid) {
@@ -92,13 +93,11 @@ console.log("ALL_TYPES: ", ALL_TYPES)
         "volume": volume_container,
         "temperature": temperature_container
     }
-    select.addEventListener('change', function() {
-      selectedValue = select.value
 
-      console.log("selected value: ", selectedValue);
-      console.log("TYPE_FIELDS_MAP: ", TYPE_FIELDS_MAP)
+    function show_relevant_fields(){
+        selectedValue = select.value
+
       let types_to_show = TYPE_FIELDS_MAP[selectedValue] || []
-      console.log("types_to_show: ", types_to_show)
       ALL_TYPES.forEach(type=>{
         if(types_to_show.includes(type)){
             type_element_map[type].classList.remove("hidden");
@@ -107,9 +106,13 @@ console.log("ALL_TYPES: ", ALL_TYPES)
             type_element_map[type].classList.add('hidden');
         }
       })
+    }
 
 
+    select.addEventListener('change', function() {
+        show_relevant_fields()
     });
+    show_relevant_fields()
 }  
 
 function docReady(fn) {

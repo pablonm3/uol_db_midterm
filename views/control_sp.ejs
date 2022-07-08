@@ -15,6 +15,11 @@
      <link href="/css/status.css" rel="stylesheet">
      <script src="/js/add.js"></script>
   </head>
+  <script>
+        const ALL_TYPES = JSON.parse('<%- JSON.stringify(all_types) %>')
+        const TYPE_FIELDS_MAP = JSON.parse('<%- JSON.stringify(type_fields_map) %>')
+  </script>
+  
   <body class="d-flex h-100 text-center text-white bg-dark">
     
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -70,7 +75,7 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 hidden" id="on_off_container">
             <label for="select_on_off" class="form-label">Device status(on / off)</label>
             <select class="form-select" name="on_off" id="select_on_off" aria-label="Default select status">
               <%
@@ -87,7 +92,7 @@
             </select>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3 hidden" id="open_locked_container">
             <label for="select_lock" class="form-label">Device status(open / locked)</label>
             <select class="form-select" name="open_locked" id="select_lock" aria-label="Default select status">
               <%
@@ -104,7 +109,7 @@
             </select>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3 hidden" id="open_closed_container">
             <label for="select_open_close" class="form-label">Device status(open / closed)</label>
             <select class="form-select" name="open_closed"  id="select_open_close" aria-label="Default select open/close">
               <%
@@ -121,12 +126,12 @@
             </select>
           </div>
           
-          <div class="mb-3">
+          <div class="mb-3 hidden" id="volume_container">
             <p class="form-label">Device volume</p>
             <input type="range" name="volume" min="1" max="100" value="<%=device.volume%>" class="slider" id="volume">
           </div>
 
-          <div class="mb-3 has-validation">
+          <div class="mb-3 has-validation hidden" id="temperature_container">
             <label for="temperature_input" class="form-label">Temperature(degree celcius)</label>
             <input min="16" max="30" name="temperature" value="<%=device.temperature%>" type="number" class="form-control" id="temperature_input">
             <div id="temperature_error" class="invalid-feedback">

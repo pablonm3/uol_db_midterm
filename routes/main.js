@@ -126,11 +126,11 @@ module.exports = function(app) {
         db.query(sqlquery, req.query.name, (err, result) => {
             if (err) {
                 console.error("err: ", err)
-                res.render("control.ejs",  {status:"error", devices: []});
+                res.render("control.ejs",  {status:"error", devices: [], all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
             }
             else{
                 console.log("devices result: ", result)
-                res.render("control_sp.ejs",  {status:"", device: result[0]});
+                res.render("control_sp.ejs",  {status:"", device: result[0], all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
             }
         });
     });
@@ -138,18 +138,27 @@ module.exports = function(app) {
     app.post("/control_sp",function(req, res) {
 
         console.log("req.body: ", req.body)
-        var sql = `UPDATE devices set type='${req.body.type}', on_off='${req.body.on_off}', open_locked='${req.body.open_locked}', open_closed='${req.body.open_closed}', volume='${req.body.volume}', temperature='${req.body.temperature}' WHERE name='${req.body.name}'`;
+        let types_to_store = TYPE_FIELDS_MAP[req.body.type]
+        var sql = `UPDATE devices set type='${req.body.type}'`;
+        types_to_store.forEach(type => {
+            let value = req.body[type]
+            if(["volume", "temperature"].includes(type)){
+                value = parseInt(value)
+            }
+            sql += `, ${type}='${req.body[type]}'`
+        });
+        sql += ` WHERE name='${req.body.name}'`
         db.query(sql, function (err, result) {
           console.error("result: ", result)
           let sqlquery = "SELECT * FROM devices WHERE name = ?";
           db.query(sqlquery, req.body.name, (err, result) => {
                 if (err) {
                     console.error("err: ", err)
-                    res.render("control.ejs",  {status:"error", devices: []});
+                    res.render("control.ejs",  {status:"error", devices: [], all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
                 }
                 else{
                     console.log("devices result: ", result)
-                    res.render("control_sp.ejs",  {status:"ok", device: result[0]});
+                    res.render("control_sp.ejs",  {status:"ok", device: result[0], all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
                 }
              });
         });
