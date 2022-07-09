@@ -42,7 +42,6 @@ module.exports = function(app) {
     });
 
     app.get("/add",function(req, res) {
-        console.error("get add page")
         res.render("add.ejs",  {status: "", all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
     });
 
@@ -63,7 +62,6 @@ module.exports = function(app) {
              res.render("add.ejs",  {status: "error", all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
              console.error("Something went wrong: ", err)
           }
-          console.log("1 record inserted");
           res.render("add.ejs",  {status: "ok", all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
         });
     });
@@ -79,7 +77,6 @@ module.exports = function(app) {
                 res.render("status.ejs",  {status:"error", devices: []});
             }
             else{
-                console.log("devices result: ", result)
                 res.render("status.ejs",  {status:"ok", devices: result});
             }
         });
@@ -87,7 +84,6 @@ module.exports = function(app) {
 
     app.get("/status_sp", function(req, res) {
         // query database to get all the books
-        console.log("req.query: ", req.query)
         let sqlquery = "SELECT * FROM devices WHERE name = ?";
         // execute sql query
         db.query(sqlquery, req.query.name, (err, result) => {
@@ -96,7 +92,6 @@ module.exports = function(app) {
                 res.render("status.ejs",  {status:"error", devices: []});
             }
             else{
-                console.log("devices result: ", result)
                 res.render("status_sp.ejs",  {status:"ok", device: result[0]});
             }
         });
@@ -112,7 +107,6 @@ module.exports = function(app) {
                 res.render("control.ejs",  {status:"error", devices: []});
             }
             else{
-                console.log("devices result: ", result)
                 res.render("control.ejs",  {status:"ok", devices: result});
             }
         });
@@ -120,7 +114,6 @@ module.exports = function(app) {
 
     app.get("/control_sp", function(req, res) {
         // query database to get all the books
-        console.log("control page req.query: ", req.query)
         let sqlquery = "SELECT * FROM devices WHERE name = ?";
         // execute sql query
         db.query(sqlquery, req.query.name, (err, result) => {
@@ -129,7 +122,6 @@ module.exports = function(app) {
                 res.render("control.ejs",  {status:"error", devices: [], all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
             }
             else{
-                console.log("devices result: ", result)
                 res.render("control_sp.ejs",  {status:"", device: result[0], all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
             }
         });
@@ -137,19 +129,19 @@ module.exports = function(app) {
 
     app.post("/control_sp",function(req, res) {
 
-        console.log("req.body: ", req.body)
         let types_to_store = TYPE_FIELDS_MAP[req.body.type]
-        var sql = `UPDATE devices set type='${req.body.type}'`;
+        var sql = `UPDATE devices set`;
+        sql_list = []
         types_to_store.forEach(type => {
             let value = req.body[type]
             if(["volume", "temperature"].includes(type)){
                 value = parseInt(value)
             }
-            sql += `, ${type}='${req.body[type]}'`
+            sql_list.push(` ${type}='${req.body[type]}'`)
         });
+        sql += " " + sql_list.join(", ")
         sql += ` WHERE name='${req.body.name}'`
         db.query(sql, function (err, result) {
-          console.error("result: ", result)
           let sqlquery = "SELECT * FROM devices WHERE name = ?";
           db.query(sqlquery, req.body.name, (err, result) => {
                 if (err) {
@@ -157,7 +149,6 @@ module.exports = function(app) {
                     res.render("control.ejs",  {status:"error", devices: [], all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
                 }
                 else{
-                    console.log("devices result: ", result)
                     res.render("control_sp.ejs",  {status:"ok", device: result[0], all_types: ALL_TYPES, type_fields_map: TYPE_FIELDS_MAP});
                 }
              });
@@ -181,10 +172,8 @@ module.exports = function(app) {
 
     app.post("/delete",function(req, res) {
 
-        console.log("req.query: ", req.body)
         var sql = `DELETE FROM devices WHERE name='${req.body.name}'`;
         db.query(sql, function (err, result) {
-          console.error("result: ", result)
           let sqlquery = "SELECT name FROM devices";
           db.query(sqlquery, req.body.name, (err, result) => {
                 if (err) {

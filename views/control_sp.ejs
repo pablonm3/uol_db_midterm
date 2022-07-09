@@ -14,12 +14,13 @@
      <link href="/css/app.css" rel="stylesheet">
      <link href="/css/status.css" rel="stylesheet">
      <script src="/js/add.js"></script>
+     <link href="/css/add.css" rel="stylesheet">
   </head>
   <script>
         const ALL_TYPES = JSON.parse('<%- JSON.stringify(all_types) %>')
         const TYPE_FIELDS_MAP = JSON.parse('<%- JSON.stringify(type_fields_map) %>')
   </script>
-  
+
   <body class="d-flex h-100 text-center text-white bg-dark">
     
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -50,29 +51,7 @@
         </div>
         <div class="mb-3">
           <label for="selectType" class="form-label">Type</label>
-          <select class="form-select" name="type" id="selectType" aria-label="Default select type">
-              <%
-                  var options = [{"value": "ac", "display":"Air conditioner"},
-                                  {"value": "heating", "display":"Heating"},
-                                  {"value": "curtains", "display":"curtains"},
-                                  {"value": "blinds", "display":"blinds"},
-                                  {"value": "lights", "display":"lights"},
-                                  {"value": "TV", "display":"TV"},
-                                  {"value": "audio", "display":"Audio System"},
-                                  {"value": "coffee", "display":"Coffee maker"},
-                                  {"value": "lock", "display":"Door lock"},
-                                  {"value": "outlet", "display":"outlet"}
-                                  ]
-                  for ( var i = 0; i < options.length; i++ )
-                  {
-                      const option = options[i]
-                      var selected = ( option['value'] == device.type ) ? "selected" : "";
-                      %><option value="<%=option['value'] %>" <%=selected %>> <%=option["display"] %> </option><%
-                  }
-              %>
-          </select>
-          <div id="device_type_error" class="invalid-feedback">
-          </div>
+          <input readonly value="<%=device.type%>" type="text" name="type" class="form-control" id="selectType">
         </div>
 
         <div class="mb-3 hidden" id="on_off_container">
